@@ -15,6 +15,9 @@ It's a demo app built by dify.
 4. 对迭代内容进行整合。
 5. 输出工作流结果。
 
+![image](https://github.com/user-attachments/assets/fc619073-6b2a-4fc7-9ae8-668673e45b96)
+
+
 ## 如何使用
 ### 前提条件
 1. 项目基于 Dify 0.14.1版本进行搭建，请使用不低于该版本的Dify服务。
@@ -25,6 +28,8 @@ It's a demo app built by dify.
 2. 访问本地dify服务或cloud.dify.ai，完成登录。
 3. 访问"Studio/工作室"，在左上角第一个卡片中，点击"Import DSL file/导入DSL文件"，完成yml文件上传。
 4. 点击已上传的APP即可进行编辑。
+
+![image](https://github.com/user-attachments/assets/1d0b0f18-6aad-4145-b25f-31279bf14ab9)
 
 ## 说明
 本项目基于Dify进行搭建，仅供学习与参考。
