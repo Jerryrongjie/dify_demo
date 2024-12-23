@@ -5,8 +5,11 @@ It's a demo app built by dify.
 
 ## 介绍
 ### CoT Chatflow
-通过模仿o1 CoT（Chain of Thought）模式，进行 Agent Workflow搭建，步骤式的进行问题分析、任务拆解、任务执行、推理总结等步骤，更好地完成用户需求，提高回答的可靠性。low搭建，步骤式的进行问题分析、任务拆解、任务执行、推理总结等步骤，更好地完成用户需求，提高回答的可靠性。
+通过模仿o1 CoT（Chain of Thought）模式，进行 Agent Workflow搭建，步骤式的进行问题分析、任务拆解、任务执行、推理总结等步骤，更好地完成用户需求，提高回答的可靠性。
+
 本Demo仅通过多LLM节点编写Prompt的方式进行模拟，不代表o1的真实逻辑，仅作为学习参考。
+
+![Chatflow_demo](https://github.com/user-attachments/assets/208c0392-461b-4312-b179-ba1435271baa)
 
 项目体现了Agent的四个核心能力：
 1. 感知能力：支持使用视觉模型，进行数学题推导。（Dify Chatflow目前版本仍存在缺陷 v0.14.1）
@@ -14,7 +17,7 @@ It's a demo app built by dify.
 3. 执行能力：通过获取大模型自行规划的任务，完成任务的处理并生成处理结果。
 4. 自我反思：结合原始提问、任务步骤完成结果进行内容的汇总整合，并输出完整的推理过程、结论。
 
-
+![Chatflow_config](https://github.com/user-attachments/assets/5f06764a-c5d0-4672-beba-09a3f59dc926)
 
 ### 36kr | daily news
 查询36kr官方内容号发布的每日新闻汇总，并通过jina.ai的接口服务获取新闻内容转为Markdown格式。
