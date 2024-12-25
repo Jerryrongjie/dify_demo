@@ -9,15 +9,13 @@ It's a demo app built by dify.
 
 本Demo仅通过多LLM节点编写Prompt的方式进行模拟，不代表o1的真实逻辑，仅作为学习参考。
 
-![Chatflow_demo](https://github.com/user-attachments/assets/208c0392-461b-4312-b179-ba1435271baa)
+![CoT](https://github.com/user-attachments/assets/946a6071-5541-4b15-b6af-078348301289)
 
 项目体现了Agent的四个核心能力：
 1. 感知能力：支持使用视觉模型，提供多模态感知能力。
 2. 规划能力：支持由大模型自行规划问题的解决步骤并拆分为任务项。
 3. 执行能力：通过获取大模型自行规划的任务，完成任务的处理并生成处理结果。
 4. 自我反思：结合原始提问、任务步骤完成结果进行内容的汇总整合，并输出完整的推理过程、结论。
-
-![Chatflow_config](https://github.com/user-attachments/assets/5f06764a-c5d0-4672-beba-09a3f59dc926)
 
 ### 36kr | daily news
 查询36kr官方内容号发布的每日新闻汇总，并通过jina.ai的接口服务获取新闻内容转为Markdown格式。
@@ -30,8 +28,7 @@ It's a demo app built by dify.
 4. 对迭代内容进行整合。
 5. 输出工作流结果。
 
-![image](https://github.com/user-attachments/assets/fc619073-6b2a-4fc7-9ae8-668673e45b96)
-
+![DailyNews](https://github.com/user-attachments/assets/44e73b02-bf88-4874-ad55-ed3edd2c7872)
 
 ## 如何使用
 ### 前提条件
