@@ -12,23 +12,25 @@ app:
 kind: app
 version: 0.1.4
 workflow:
-  conversation_variables: []
+  conversation_variables:
+  - description: 任务输出
+    id: 4ff00628-982e-4a72-ac0f-72c98320e37a
+    name: tasks_output
+    selector:
+    - conversation
+    - tasks_output
+    value: []
+    value_type: array[string]
   environment_variables: []
   features:
     file_upload:
-      allowed_file_extensions:
-      - .JPG
-      - .JPEG
-      - .PNG
-      - .GIF
-      - .WEBP
-      - .SVG
+      allowed_file_extensions: []
       allowed_file_types:
       - image
       allowed_file_upload_methods:
-      - local_file
       - remote_url
-      enabled: false
+      - local_file
+      enabled: true
       fileUploadConfig:
         audio_file_size_limit: 50
         batch_count_limit: 5
@@ -42,7 +44,7 @@ workflow:
         transfer_methods:
         - local_file
         - remote_url
-      number_limits: 3
+      number_limits: 1
     opening_statement: ''
     retriever_resource:
       enabled: false
@@ -59,15 +61,6 @@ workflow:
       voice: ''
   graph:
     edges:
-    - data:
-        sourceType: start
-        targetType: llm
-      id: 1734854371599-llm
-      source: '1734854371599'
-      sourceHandle: source
-      target: llm
-      targetHandle: target
-      type: custom
     - data:
         isInIteration: false
         sourceType: llm
@@ -124,10 +117,23 @@ workflow:
       type: custom
       zIndex: 0
     - data:
+        isInIteration: true
+        iteration_id: '1734856942559'
+        sourceType: llm
+        targetType: assigner
+      id: 1734881294884-source-1735122746436-target
+      source: '1734881294884'
+      sourceHandle: source
+      target: '1735122746436'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
         isInIteration: false
         sourceType: llm
         targetType: answer
       id: 1734882776733-source-1734883088635-target
+      selected: false
       source: '1734882776733'
       sourceHandle: source
       target: '1734883088635'
@@ -146,6 +152,17 @@ workflow:
       targetHandle: target
       type: custom
       zIndex: 1002
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: llm
+      id: 1734854371599-source-llm-target
+      source: '1734854371599'
+      sourceHandle: source
+      target: llm
+      targetHandle: target
+      type: custom
+      zIndex: 0
     nodes:
     - data:
         desc: ''
@@ -157,10 +174,10 @@ workflow:
       id: '1734854371599'
       position:
         x: 30
-        y: 301.5
+        y: 294.5
       positionAbsolute:
         x: 30
-        y: 301.5
+        y: 294.5
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -183,15 +200,15 @@ workflow:
             size: 50
         model:
           completion_params:
-            max_tokens: 4095
+            max_tokens: 1024
             num_predict: 127998
-            temperature: 0.6
+            temperature: 0.9
           mode: chat
-          name: qwen2.5:14b
-          provider: ollama
+          name: glm-4v-plus
+          provider: zhipuai
         prompt_template:
         - edition_type: basic
-          id: 39d9f67a-bd9a-4802-8171-0d402066c93b
+          id: 291fd84a-8fdc-46f8-ad23-7673b895c3af
           role: system
           text: '你是一个能够详细分析用户问题、拆解任务步骤、按步骤逐步完成任务的智能助手。
 
@@ -202,7 +219,7 @@ workflow:
 
             当你第一次接受用户的信息时，你应该这样做：
 
-            1. 首先获取用户提问{{#sys.query#}}
+            1. 首先获取用户提问{{#sys.query#}}{{#sys.files#}}
 
             2. 用自然语言清楚地重新表述人类的信息
 
@@ -237,15 +254,15 @@ workflow:
             variable_selector:
             - sys
             - files
-          enabled: false
+          enabled: true
       height: 98
       id: llm
       position:
         x: 334
-        y: 301.5
+        y: 294.5
       positionAbsolute:
         x: 334
-        y: 301.5
+        y: 294.5
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -285,7 +302,7 @@ workflow:
             3. 按照json格式返回任务步骤数组。\n\n<example>\n[ \n\t{ \n\t\t\"name\": \"步骤名称\", \n\
             \t\t\"content\": \"任务描述\" \n\t}, \n\t{\n\t\t\"name\"：\"步骤名称\", \n\t\t\"\
             content\"：\"任务描述\"\n\t}, \n\t... \n]\n</example>\n\n# 限制\n1. 请不要试图自行解答问题。\n\
-            2. 请务必使用json格式返回任务步骤，否则你就失败了。\n3. 请不要使用 ```json 包裹内容。\n"
+            2. 请务必仅输出json格式内容，否则你就失败了。\n3. 请不要使用 ```json 包裹内容。\n"
         selected: false
         title: 任务拆解
         type: llm
@@ -296,10 +313,10 @@ workflow:
       id: '1734854639225'
       position:
         x: 638
-        y: 301.5
+        y: 294.5
       positionAbsolute:
         x: 638
-        y: 301.5
+        y: 294.5
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -307,11 +324,12 @@ workflow:
       width: 244
     - data:
         desc: ''
-        instruction: "提取内容中的任务步骤数组，示例如下： \n[ \n\t{ \n\t\t\"name\": \"步骤名称\", \n\t\t\
-          \"content\": \"任务描述\" \n\t}, \n\t{\n\t\t\"name\"：\"步骤名称\", \n\t\t\"content\"\
+        instruction: "提取内容中的任务数组，示例如下： \n[ \n\t{ \n\t\t\"name\": \"步骤名称\", \n\t\t\"\
+          content\": \"任务描述\" \n\t}, \n\t{\n\t\t\"name\"：\"步骤名称\", \n\t\t\"content\"\
           ：\"任务描述\"\n\t}, \n\t... \n]"
         model:
           completion_params:
+            format: json
             temperature: 0.7
           mode: chat
           name: qwen2.5:14b
@@ -335,10 +353,10 @@ workflow:
       id: '1734856853467'
       position:
         x: 942
-        y: 301.5
+        y: 294.5
       positionAbsolute:
         x: 942
-        y: 301.5
+        y: 294.5
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -347,7 +365,7 @@ workflow:
     - data:
         desc: ''
         error_handle_mode: terminated
-        height: 203
+        height: 189
         is_parallel: false
         iterator_selector:
         - '1734856853467'
@@ -361,20 +379,20 @@ workflow:
         start_node_id: 1734856942559start
         title: 迭代
         type: iteration
-        width: 423
-      height: 203
+        width: 640
+      height: 189
       id: '1734856942559'
       position:
         x: 1246
-        y: 301.5
+        y: 294.5
       positionAbsolute:
         x: 1246
-        y: 301.5
+        y: 294.5
       selected: false
       sourcePosition: right
       targetPosition: left
       type: custom
-      width: 423
+      width: 640
       zIndex: 1
     - data:
         desc: ''
@@ -391,7 +409,7 @@ workflow:
         y: 68
       positionAbsolute:
         x: 1270
-        y: 369.5
+        y: 362.5
       selectable: false
       sourcePosition: right
       targetPosition: left
@@ -418,84 +436,18 @@ workflow:
         prompt_template:
         - id: 5fd91038-7506-471a-9a16-7c6dda84a1e5
           role: system
-          text: '你是一个能够详细分析用户问题、拆解任务步骤、按步骤逐步完成任务的智能助手。
-
-            对于每一次与用户的互动，你在回答前必须进行全面的、自然的思考过程。
-
-
-            # 要求
-
-            你已完成任务的规划，请根据当前获取的任务名称、描述完成任务：
-
-            1. 从上下文```{{#1734856942559.item#}}```获取你的任务名称"name"​和描述"context"
-
-            2. 写出对这个任务的多种可能的解释
-
-            3. 考虑各种解决方案
-
-            4. 回顾各种解决方案的可行性
-
-            5. 按照下面的格式要求完成任务解答：
-
-            **任务名称**
-
-            描述：
-
-
-            解答：
-
-            ============================
-
-
-            # 任务
-
-            1. 直接说明任务的名称、描述。
-
-            2. 根据"要求"对任务进行解答。
-
-            3. 请再次检查内容是否符合格式要求，在有需要时对内容格式进行进一步调整。
-
-
-            # 案例
-
-            <example>
-
-            **任务：手动计数**
-
-
-            描述：
-
-            遍历单词 ''strawberry'' 的每个字母，统计字母 ''r'' 出现的次数。
-
-
-            解答：
-
-            通过手动遍历单词 ''strawberry''，我们可以逐个字母进行检查和计数。具体步骤如下：
-
-            1. 从单词的第一个字母开始，依次查看每个字母。
-
-            2. 每当遇到字母 ''r'' 时，计数器加1。
-
-            3. 继续遍历直到单词的最后一个字母。
-
-
-            经过手动计数，字母 ''r'' 在单词 ''strawberry'' 中出现了 3 次。
-
-            ============================
-
-
-            </example>
-
-
-            # 限制
-
-            1. 不必输出任何解释，直接完成任务的回答。
-
-            2. 请务必使用Markdown格式回答问题，否则你就失败了。
-
-            3. 不要输出 <example></example>标签。
-
-            '
+          text: "你是一个能够详细分析用户问题、拆解任务步骤、按步骤逐步完成任务的智能助手。\n对于每一次与用户的互动，你在回答前必须进行全面的、自然的思考过程。\n\
+            \n# 要求\n你已完成任务的规划，请根据当前获取的任务名称、描述完成任务：\n1. 获取数据\n- 从上下文```{{#1734856942559.item#}}```获取你的任务名称\"\
+            name\"​和描述\"context\"\n- 查询前面已执行任务的输出```{{#conversation.tasks_output#}}```\n\
+            2. 写出对这个任务的多种可能的解释\n3. 考虑各种解决方案\n4. 回顾各种解决方案的可行性\n5. 按照下面的格式要求完成任务解答：\n\
+            ```\n==============Thinking==============\n**任务：......** \n描述：......\n\
+            \n解答：......\n\n```\n\n# 任务\n1. 直接说明任务的名称、描述。\n2. 根据\"要求\"对任务进行解答。\n3.\
+            \ 请再次检查内容是否符合格式要求，在有需要时对内容格式进行进一步调整。\n\n# 案例\n<example>\n==============Thinking==============\n\
+            \n**任务：统计stawberry中r字母的数量**\n\n描述：遍历单词 'strawberry' 的每个字母，统计字母 'r' 出现的次数。\n\
+            \n解答：通过手动遍历单词 'strawberry'，我们可以逐个字母进行检查和计数。具体步骤如下：\n1. 从单词的第一个字母开始，依次查看每个字母。\n\
+            2. 每当遇到字母 'r' 时，计数器加1。\n3. 继续遍历直到单词的最后一个字母。\n\n经过手动计数，字母 'r' 在单词 'strawberry'\
+            \ 中出现了 3 次。\n\n</example>\n\n# 限制\n1. 不必输出任何解释，直接完成任务的回答。\n2. 请务必使用Markdown格式回答问题，否则你就失败了。\n\
+            3. 不要输出 <example></example>标签。\n"
         selected: false
         title: 任务执行
         type: llm
@@ -506,11 +458,11 @@ workflow:
       id: '1734881294884'
       parentId: '1734856942559'
       position:
-        x: 159.64203805449824
+        x: 101.7466841074015
         y: 65
       positionAbsolute:
-        x: 1405.6420380544982
-        y: 366.5
+        x: 1347.7466841074015
+        y: 359.5
       selected: true
       sourcePosition: right
       targetPosition: left
@@ -531,11 +483,11 @@ workflow:
       height: 54
       id: '1734882559796'
       position:
-        x: 1727.5714285714287
-        y: 301.5
+        x: 1946
+        y: 294.5
       positionAbsolute:
-        x: 1727.5714285714287
-        y: 301.5
+        x: 1946
+        y: 294.5
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -560,7 +512,7 @@ workflow:
           completion_params:
             max_tokens: 4095
             num_ctx: 12800
-            temperature: 0.6
+            temperature: 0.5
           mode: chat
           name: glm-4-plus
           provider: zhipuai
@@ -580,7 +532,7 @@ workflow:
 
             - 初步分析: {{#llm.text#}}
 
-            - 任务拆解: {{#1734854639225.text#}}
+            - 任务规划: {{#1734854639225.text#}}
 
             - 任务执行: {{#1734882559796.output#}}
 
@@ -602,7 +554,7 @@ workflow:
             ...
 
 
-            ## 任务拆解与执行
+            ## 任务规划与执行
 
             ...
 
@@ -624,7 +576,7 @@ workflow:
             {{#llm.text#}}
 
 
-            ## 任务拆解与执行
+            ## 任务规划与执行
 
             {{#1734882559796.output#}}
 
@@ -649,11 +601,11 @@ workflow:
       height: 98
       id: '1734882776733'
       position:
-        x: 2033
-        y: 301.5
+        x: 2250
+        y: 294.5
       positionAbsolute:
-        x: 2033
-        y: 301.5
+        x: 2250
+        y: 294.5
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -669,17 +621,50 @@ workflow:
       height: 102
       id: '1734883088635'
       position:
-        x: 2337
-        y: 301.5
+        x: 2554
+        y: 294.5
       positionAbsolute:
-        x: 2337
-        y: 301.5
+        x: 2554
+        y: 294.5
       selected: false
       sourcePosition: right
       targetPosition: left
       type: custom
       width: 244
+    - data:
+        desc: ''
+        isInIteration: true
+        items:
+        - input_type: variable
+          operation: append
+          value:
+          - '1734881294884'
+          - text
+          variable_selector:
+          - conversation
+          - tasks_output
+          write_mode: over-write
+        iteration_id: '1734856942559'
+        selected: false
+        title: 任务输出
+        type: assigner
+        version: '2'
+      height: 88
+      id: '1735122746436'
+      parentId: '1734856942559'
+      position:
+        x: 379.3563237687838
+        y: 65
+      positionAbsolute:
+        x: 1625.3563237687838
+        y: 359.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
     viewport:
-      x: 102.70000000000044
-      y: 138.75
-      zoom: 0.7
+      x: -535.707480096534
+      y: -84.60491521643712
+      zoom: 1.0610015965572788
